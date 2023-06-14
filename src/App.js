@@ -1,24 +1,43 @@
-import logo from './logo.svg';
-import './App.css';
+import { Web3OnboardProvider } from "@web3-onboard/react";
+import { SUBGRAPH_CLIENT, web3Onboard } from "./helper/onboarding";
+import { useEffect, useState } from "react";
+import { fetchNfts } from "./helper/data";
+import CollectionCard from "./components/CollectionCard";
+import { DAO_ADDRESS } from "./helper/constants";
+import { ApolloProvider } from "@apollo/client";
+import "./App.css";
 
 function App() {
+  const [nftsData, setNftsData] = useState([]);
+
+  useEffect(() => {
+    const getNftData = async () => {
+      const data = await fetchNfts(DAO_ADDRESS);
+      setNftsData(data);
+    };
+
+    getNftData();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ApolloProvider client={SUBGRAPH_CLIENT}>
+      <Web3OnboardProvider web3Onboard={web3Onboard}>
+        <div className='App'>
+          <div style={{ display: "flex", marginTop: "72px" }}>
+            {nftsData &&
+              nftsData.map((data, key) => (
+                <CollectionCard
+                  key={key}
+                  metadata={data.metadata}
+                  tokenName={data.name}
+                  tokenSymbol={data.symbol}
+                  nftData={data}
+                />
+              ))}
+          </div>
+        </div>
+      </Web3OnboardProvider>
+    </ApolloProvider>
   );
 }
 
