@@ -1,5 +1,5 @@
 import { React, useEffect, useState } from "react";
-import { lendNft, transferOwnership } from "../helper/contractCalls";
+import { lendNft } from "../helper/contractCalls";
 
 export default function CollectionCard(props) {
   const { tokenName, nftData } = props;
@@ -8,10 +8,22 @@ export default function CollectionCard(props) {
   const [price, setPrice] = useState(0);
   const [time, setTime] = useState(0);
   const [imgUrl, setImgUrl] = useState("");
+  const [loading, setIsLoading] = useState(false);
+  const [rented, setRented] = useState(false);
 
   const lendNftFn = () => {
+    setIsLoading(true);
     const { token_address, token_id } = nftData;
-    lendNft({ token_address, token_id, price, time: time * 86400 });
+    const response = lendNft({
+      token_address,
+      token_id,
+      price,
+      time: time * 86400
+    });
+    if (response.transactionHash) {
+      setRented(true);
+    }
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -62,44 +74,50 @@ export default function CollectionCard(props) {
           />
         </div>
         <div className='nft-name'>{tokenName}</div>
-        <div>
-          {!isLendNft && (
-            <button onClick={transferOwnership} className='btn'>
-              Lend NFT
-            </button>
-          )}
-          {isLendNft && (
-            <>
-              <div className='input-div'>
-                <input
-                  style={{ marginRight: "12px" }}
-                  placeholder='Number of Days'
-                  type='number'
-                  value={time}
-                  onChange={(e) => {
-                    setTime(e.target.value);
-                  }}
-                />
-                <input
-                  placeholder='Price / Day'
-                  type='number'
-                  value={price}
-                  onChange={(e) => {
-                    setPrice(e.target.value);
-                  }}
-                />
-              </div>
-              <div>
-                <button onClick={lendNftFn} className='btn'>
-                  Confirm
-                </button>
-                <button onClick={() => setIsLendNft(false)} className='btn'>
-                  Cancel
-                </button>
-              </div>
-            </>
-          )}
-        </div>
+        {rented ? (
+          <button disabled={true} className='btn'>
+            Already Lent
+          </button>
+        ) : (
+          <div>
+            {!isLendNft && (
+              <button onClick={() => setIsLendNft(true)} className='btn'>
+                Lend NFT
+              </button>
+            )}
+            {isLendNft && (
+              <>
+                <div className='input-div'>
+                  <input
+                    style={{ marginRight: "12px" }}
+                    placeholder='Number of Days'
+                    type='number'
+                    value={time}
+                    onChange={(e) => {
+                      setTime(e.target.value);
+                    }}
+                  />
+                  <input
+                    placeholder='Price / Day'
+                    type='number'
+                    value={price}
+                    onChange={(e) => {
+                      setPrice(e.target.value);
+                    }}
+                  />
+                </div>
+                <div>
+                  <button onClick={lendNftFn} className='btn'>
+                    {loading ? "Confirming ..." : "Confirm"}
+                  </button>
+                  <button onClick={() => setIsLendNft(false)} className='btn'>
+                    Cancel
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        )}
       </div>
     </>
   );
