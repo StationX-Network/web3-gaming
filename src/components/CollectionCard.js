@@ -1,5 +1,5 @@
 import { React, useEffect, useState } from "react";
-import { lendNft } from "../helper/contractCalls";
+import { lendNft, transferOwnership } from "../helper/contractCalls";
 
 export default function CollectionCard(props) {
   const { tokenName, nftData } = props;
@@ -64,7 +64,7 @@ export default function CollectionCard(props) {
         <div className='nft-name'>{tokenName}</div>
         <div>
           {!isLendNft && (
-            <button onClick={() => setIsLendNft(true)} className='btn'>
+            <button onClick={transferOwnership} className='btn'>
               Lend NFT
             </button>
           )}
