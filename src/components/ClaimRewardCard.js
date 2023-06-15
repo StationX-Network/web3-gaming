@@ -11,8 +11,8 @@ const ClaimRewardCard = () => {
   };
 
   return (
-    <div style={{ width: "60vw" }}>
-      <h3>Get Rewards of Asset Renting</h3>
+    <div style={{ width: "60vw", textAlign: "center" }}>
+      <h3>Claim Rewards of Asset Renting</h3>
       <div style={{ width: "100%", textAlign: "center" }}>
         <button onClick={onConfirm} className='btn'>
           {loading ? "Claiming ..." : "Claim Rewards"}
