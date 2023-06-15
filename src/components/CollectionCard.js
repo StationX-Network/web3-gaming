@@ -88,23 +88,29 @@ export default function CollectionCard(props) {
             {isLendNft && (
               <>
                 <div className='input-div'>
-                  <input
-                    style={{ marginRight: "12px" }}
-                    placeholder='Number of Days'
-                    type='number'
-                    value={time}
-                    onChange={(e) => {
-                      setTime(e.target.value);
-                    }}
-                  />
-                  <input
-                    placeholder='Price / Day'
-                    type='number'
-                    value={price}
-                    onChange={(e) => {
-                      setPrice(e.target.value);
-                    }}
-                  />
+                  <div style={{ width: "80%", margin: "12px 12px" }}>
+                    <label>Number of Days</label>
+                    <input
+                      style={{ marginRight: "12px" }}
+                      placeholder='Number of Days'
+                      type='number'
+                      value={time}
+                      onChange={(e) => {
+                        setTime(e.target.value);
+                      }}
+                    />
+                  </div>
+                  <div style={{ width: "80%", margin: "12px 12px" }}>
+                    <label>Price/Day</label>
+                    <input
+                      placeholder='Price / Day'
+                      type='number'
+                      value={price}
+                      onChange={(e) => {
+                        setPrice(e.target.value);
+                      }}
+                    />
+                  </div>
                 </div>
                 <div>
                   <button onClick={lendNftFn} className='btn'>
