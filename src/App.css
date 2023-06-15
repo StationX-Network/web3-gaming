@@ -63,5 +63,6 @@ select {
   border: 1px solid;
   padding: 0px 12px;
   font-size: medium;
-  min-width: 500px;
+  width: 500px;
+  max-width: 100%;
 }

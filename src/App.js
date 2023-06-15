@@ -51,7 +51,7 @@ function App() {
           />
           <div className='listing-div'>
             {selected === "Claim" ? (
-              <> {!isOwner ? <ClaimSetupCard /> : <ClaimRewardCard />} </>
+              <> {isOwner ? <ClaimSetupCard /> : <ClaimRewardCard />} </>
             ) : (
               <>
                 {isOwner ? (
