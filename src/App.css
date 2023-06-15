@@ -49,12 +49,19 @@
   margin-top: 12px;
 }
 
-input {
-  height: 40px;
+.claim-input-div {
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+input,
+select {
+  height: 60px;
   border-radius: 12px;
   border: 1px solid;
-  width: 100%;
-  padding: 12px;
+  padding: 0px 12px;
   font-size: medium;
-  margin-top: 8px;
+  min-width: 500px;
 }

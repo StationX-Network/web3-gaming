@@ -1,13 +1,15 @@
 import { Web3OnboardProvider } from "@web3-onboard/react";
 import { SUBGRAPH_CLIENT, web3Onboard } from "./helper/onboarding";
 import { useEffect, useState } from "react";
-import { fetchNfts } from "./helper/data";
+import { fetchNfts, rentedNfts } from "./helper/data";
 import CollectionCard from "./components/CollectionCard";
 import { DAO_ADDRESS } from "./helper/constants";
 import { ApolloProvider } from "@apollo/client";
 import "./App.css";
 import Sidebar from "./components/Sidebar";
 import ClaimSetupCard from "./components/ClaimSetupCard";
+import ClaimRewardCard from "./components/ClaimRewardCard";
+import RentedCard from "./components/RentedCard";
 
 function App() {
   const [nftsData, setNftsData] = useState([]);
@@ -49,22 +51,40 @@ function App() {
           />
           <div className='listing-div'>
             {selected === "Claim" ? (
-              <div>
-                <h3>Setup Rewards Claim</h3>
-                <ClaimSetupCard />
-              </div>
+              <> {isOwner ? <ClaimSetupCard /> : <ClaimRewardCard />} </>
             ) : (
               <>
-                {nftsData &&
-                  nftsData.map((data, key) => (
-                    <CollectionCard
-                      key={key}
-                      metadata={data.metadata}
-                      tokenName={data.name}
-                      tokenSymbol={data.symbol}
-                      nftData={data}
-                    />
-                  ))}
+                {isOwner ? (
+                  <>
+                    {nftsData &&
+                      nftsData.map((data, key) => {
+                        console.log(key);
+                        if (key === 2 || key === 3) {
+                          return <RentedCard {...rentedNfts[key - 2]} />;
+                        } else {
+                          return (
+                            <CollectionCard
+                              key={key}
+                              tokenName={data.name}
+                              nftData={data}
+                            />
+                          );
+                        }
+                      })}
+                  </>
+                ) : (
+                  nftsData.map((data, key) => {
+                    return (
+                      <CollectionCard
+                        isOwner={isOwner}
+                        key={key}
+                        tokenName={data.name}
+                        tokenSymbol={data.symbol}
+                        nftData={data}
+                      />
+                    );
+                  })
+                )}
               </>
             )}
           </div>

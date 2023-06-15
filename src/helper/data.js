@@ -45,3 +45,20 @@ export const subgraphQuery = async (SUBGRAPH_URL, query) => {
     console.error(error);
   }
 };
+
+export const rentedNfts = [
+  {
+    tokenName: "Galaxy Token 2",
+    imgUrl:
+      "https://ipfs.io/ipfs/Qmf4GUi4TQN8LP1JwWWuLyubtbUvf5zBaRL695DemTonpG/6079.png",
+    price: "0.1",
+    days: "5"
+  },
+  {
+    tokenName: "Galaxy Token 234",
+    imgUrl:
+      "https://ipfs.io/ipfs/QmTZtxRccEB6hcCGeGsr5d3Xd1aNk9DGdjR2fdiA3DNjet",
+    price: "0.4",
+    days: "2"
+  }
+];

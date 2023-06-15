@@ -1,9 +1,10 @@
-import { Interface } from "ethers";
+import { ethers, Interface } from "ethers";
 import Web3 from "web3";
 import { nftMarketPlaceAbi } from "../abi/nftMarketplace";
-import { CLAIM_FACTORY, DAO_ADDRESS, NFT_RENT } from "./constants";
+import { CLAIM_FACTORY, DAO_ADDRESS, NFT_RENT, USDC } from "./constants";
 import { daoContractAbi } from "../abi/daoContract";
 import { claimFactoryAbi } from "../abi/claimFactoryContract";
+import { erc20ABI } from "../abi/erc20";
 
 export const lendNft = async ({ token_address, token_id, price, time }) => {
   try {
@@ -50,7 +51,30 @@ export const lendNft = async ({ token_address, token_id, price, time }) => {
 };
 
 export const deployClaimContract = async (amount, description) => {
-  const claimSettings = { amount: amount * 10 ** 6, description };
+  const claimSettings = [
+    window.ethereum.selectedAddress, // creator address
+    window.ethereum.selectedAddress, // eoa address
+    USDC, // usdc address
+    DAO_ADDRESS, // token gating address
+    true, // has allowance - wallet , if false -> contract
+    false, // isNft
+    0, // nfttotal supply
+    true, // isClaimable
+    (Date.now() / 1000).toFixed(0), // start Date
+    1689396196, // end date
+    window.ethereum.selectedAddress, // rollback address
+    "0x0000000000000000000000000000000000000000000000000000000000000001", // merkle root
+    1,
+    [
+      false, // if false -> prorata else => custom amount
+      0,
+      ethers.parseUnits(amount, 6).toString(), // total no. of tokens
+      []
+    ],
+    [false, 0]
+  ];
+
+  // const claimSettings = { amount: amount * 10 ** 6, description };
   const web3 = new Web3(window.ethereum);
 
   const claimFactoryContractSend = new web3.eth.Contract(
@@ -60,6 +84,15 @@ export const deployClaimContract = async (amount, description) => {
 
   const response = await claimFactoryContractSend?.methods
     ?.deployClaimContract(claimSettings)
+    .send({
+      from: window.ethereum.selectedAddress
+    });
+
+  const newClaimContract = response.logs[0].address;
+
+  const erc20TokenContractSend = new web3.eth.Contract(erc20ABI, USDC);
+  await erc20TokenContractSend.methods
+    ?.approve(newClaimContract, ethers.parseUnits(amount, 6).toString())
     .send({
       from: window.ethereum.selectedAddress
     });

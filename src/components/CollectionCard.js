@@ -81,7 +81,11 @@ export default function CollectionCard(props) {
         ) : (
           <div>
             {!isLendNft && (
-              <button onClick={() => setIsLendNft(true)} className='btn'>
+              <button
+                style={{ marginTop: "36px" }}
+                onClick={() => setIsLendNft(true)}
+                className='btn'
+              >
                 Lend NFT
               </button>
             )}

@@ -2,19 +2,22 @@ import React, { useState } from "react";
 import { deployClaimContract } from "../helper/contractCalls";
 
 const ClaimSetupCard = () => {
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState(
+    "Distribution of rewards earned from Asset Renting"
+  );
   const [amount, setAmount] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const onConfirm = async () => {
     setLoading(true);
-    await deployClaimContract(description, amount);
+    await deployClaimContract(amount);
     setLoading(false);
   };
 
   return (
-    <div>
-      <div style={{ marginBottom: "24px" }}>
+    <div style={{ width: "60vw" }}>
+      <h3>Setup Rewards Claim</h3>
+      <div className='claim-input-div'>
         <label>Claim description</label>
         <input
           placeholder='Claim description'
@@ -25,7 +28,7 @@ const ClaimSetupCard = () => {
           }}
         />
       </div>
-      <div>
+      <div className='claim-input-div'>
         <label>Amount of tokens to be distributed</label>
         <input
           placeholder='Amount'
@@ -36,12 +39,26 @@ const ClaimSetupCard = () => {
           }}
         />
       </div>
-      <div style={{ width: "105%", textAlign: "center" }}>
-        <button
-          style={{ margin: "24px 0px 0px 24px" }}
-          onClick={onConfirm}
-          className='btn'
-        >
+      <div className='claim-input-div'>
+        <label>Token to be distributed</label>
+        <select value='usdc' placeholder='Select Token'>
+          <option value='btc'>BTC</option>
+          <option value='eth'>ETH</option>
+          <option value='bnb'>BNB</option>
+          <option value='usdc'>USDC</option>
+          <option value='usdt'>USDT</option>
+        </select>
+      </div>
+      <div className='claim-input-div'>
+        <label>Can be claimed by</label>
+        <select value={"3"} placeholder='Select'>
+          <option value='1'>Everyone</option>
+          <option value='2'>Upload CSV</option>
+          <option value='3'>Pro Rata</option>
+        </select>
+      </div>
+      <div style={{ width: "100%", textAlign: "center" }}>
+        <button onClick={onConfirm} className='btn'>
           {loading ? "Deploying ..." : "Deploy new reward"}
         </button>
         <div style={{ marginTop: "12px" }}>
