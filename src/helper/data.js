@@ -62,3 +62,27 @@ export const rentedNfts = [
     days: "2"
   }
 ];
+
+export const nftsForRent = [
+  {
+    tokenName: "Galaxy Token 12",
+    imgUrl:
+      "https://ipfs.io/ipfs/Qmf4GUi4TQN8LP1JwWWuLyubtbUvf5zBaRL695DemTonpG/6079.png",
+    price: "1",
+    days: "180"
+  },
+  {
+    tokenName: "Galaxy Token 34",
+    imgUrl:
+      "https://ipfs.io/ipfs/QmTZtxRccEB6hcCGeGsr5d3Xd1aNk9DGdjR2fdiA3DNjet",
+    price: "0.01",
+    days: "31"
+  },
+  {
+    tokenName: "Galaxy Token 3094",
+    imgUrl:
+      "https://ipfs.io/ipfs/QmTZtxRccEB6hcCGeGsr5d3Xd1aNk9DGdjR2fdiA3DNjet",
+    price: "0.05",
+    days: "21"
+  }
+];

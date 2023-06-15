@@ -1,7 +1,7 @@
 import { Web3OnboardProvider } from "@web3-onboard/react";
 import { SUBGRAPH_CLIENT, web3Onboard } from "./helper/onboarding";
 import { useEffect, useState } from "react";
-import { fetchNfts, rentedNfts } from "./helper/data";
+import { fetchNfts, nftsForRent, rentedNfts } from "./helper/data";
 import CollectionCard from "./components/CollectionCard";
 import { DAO_ADDRESS } from "./helper/constants";
 import { ApolloProvider } from "@apollo/client";
@@ -60,7 +60,9 @@ function App() {
                       nftsData.map((data, key) => {
                         console.log(key);
                         if (key === 2 || key === 3) {
-                          return <RentedCard {...rentedNfts[key - 2]} />;
+                          return (
+                            <RentedCard key={key} {...rentedNfts[key - 2]} />
+                          );
                         } else {
                           return (
                             <CollectionCard
@@ -73,16 +75,8 @@ function App() {
                       })}
                   </>
                 ) : (
-                  nftsData.map((data, key) => {
-                    return (
-                      <CollectionCard
-                        isOwner={isOwner}
-                        key={key}
-                        tokenName={data.name}
-                        tokenSymbol={data.symbol}
-                        nftData={data}
-                      />
-                    );
+                  nftsForRent.map((data, key) => {
+                    return <RentedCard upForRent={true} key={key} {...data} />;
                   })
                 )}
               </>
