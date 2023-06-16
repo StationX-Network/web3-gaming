@@ -158,9 +158,10 @@ export const mergeData = (assetData, lendsData, rentData) => {
     const key = nftAddress + "-" + tokenID;
     if (!dataMap.has(key)) {
       dataMap.set(key, asset);
-    } else {
-      dataMap.set(key, { ...dataMap.get(key), ...asset });
     }
+    // else {
+    //   dataMap.set(key, { ...dataMap.get(key), ...asset });
+    // }
   });
   rentData.forEach((asset) => {
     const { nftAddress, tokenID } = asset;

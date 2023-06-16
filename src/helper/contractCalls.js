@@ -1,10 +1,17 @@
 import { ethers, Interface } from "ethers";
 import Web3 from "web3";
 import { nftMarketPlaceAbi } from "../abi/nftMarketplace";
-import { CLAIM_FACTORY, DAO_ADDRESS, NFT_RENT, USDC } from "./constants";
+import {
+  CLAIM_ADDRESS,
+  CLAIM_FACTORY,
+  DAO_ADDRESS,
+  NFT_RENT,
+  USDC
+} from "./constants";
 import { daoContractAbi } from "../abi/daoContract";
 import { claimFactoryAbi } from "../abi/claimFactoryContract";
 import { erc20ABI } from "../abi/erc20";
+import { claimContractAbi } from "../abi/claimContract";
 
 export const lendNft = async ({ token_address, token_id, price, time }) => {
   try {
@@ -35,7 +42,7 @@ export const lendNft = async ({ token_address, token_id, price, time }) => {
       [token_id],
       ["1"],
       [time],
-      ["0x00c80000"],
+      ["0x00000001"],
       [3],
       [false]
     ]);
@@ -50,22 +57,17 @@ export const lendNft = async ({ token_address, token_id, price, time }) => {
   }
 };
 
-export const rentNft = async ({
-  token_address,
-  token_id,
-  time,
-  lending_id
-}) => {
+export const rentNft = async (token_address, token_id, time, lending_id) => {
   try {
     const web3 = new Web3(window.ethereum);
 
     const usdcContract = new web3.eth.Contract(erc20ABI, USDC);
 
-    const responseApproval = await usdcContract.methods
-      .approve(NFT_RENT, ethers.parseUnits("10", 6).toString())
-      .send({ from: window.ethereum.selectedAddress });
+    // const responseApproval = await usdcContract.methods
+    //   .approve(NFT_RENT, ethers.parseUnits("10", 6).toString())
+    //   .send({ from: window.ethereum.selectedAddress });
 
-    console.log(responseApproval);
+    // console.log(responseApproval);
 
     const nftRentContract = new web3.eth.Contract(nftMarketPlaceAbi, NFT_RENT);
 
@@ -74,12 +76,14 @@ export const rentNft = async ({
       [token_address],
       [token_id],
       [lending_id],
-      [time],
-      ["0x00000001"]
+      [Number(time)],
+      [1]
     ];
 
+    console.log(dataNft);
+
     const response = await nftRentContract.methods
-      .rent(NFT_RENT, ...dataNft)
+      .rent(...dataNft)
       .send({ from: window.ethereum.selectedAddress });
 
     console.log(response);
@@ -93,7 +97,7 @@ export const deployClaimContract = async (amount, description) => {
     window.ethereum.selectedAddress, // creator address
     window.ethereum.selectedAddress, // eoa address
     USDC, // usdc address
-    DAO_ADDRESS, // token gating address
+    "0x0000000000000000000000000000000000000000", // token gating address
     true, // has allowance - wallet , if false -> contract
     false, // isNft
     0, // nfttotal supply
@@ -102,10 +106,10 @@ export const deployClaimContract = async (amount, description) => {
     1689396196, // end date
     window.ethereum.selectedAddress, // rollback address
     "0x0000000000000000000000000000000000000000000000000000000000000001", // merkle root
-    1,
+    3,
     [
-      false, // if false -> prorata else => custom amount
-      0,
+      true, // if false -> prorata else => custom amount
+      ethers.parseUnits("0.01", 6).toString(),
       ethers.parseUnits(amount, 6).toString(), // total no. of tokens
       []
     ],
@@ -136,4 +140,19 @@ export const deployClaimContract = async (amount, description) => {
     });
 
   return response;
+};
+
+export const claim = async () => {
+  const web3 = new Web3(window.ethereum);
+
+  const claimContractSend = new web3.eth.Contract(
+    claimContractAbi,
+    CLAIM_ADDRESS
+  );
+
+  const amount = ethers.parseUnits("0.01", 6).toString();
+
+  await claimContractSend.methods?.claim(amount, [], []).send({
+    from: window.ethereum.selectedAddress
+  });
 };

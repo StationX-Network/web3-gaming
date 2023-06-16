@@ -17,6 +17,7 @@ import ClaimSetupCard from "./components/ClaimSetupCard";
 import ClaimRewardCard from "./components/ClaimRewardCard";
 import RentedCard from "./components/RentedCard";
 import "./App.css";
+import CollectionRentCard from "./components/CollectionRentCard";
 
 function App() {
   const [nftsData, setNftsData] = useState([]);
@@ -50,6 +51,8 @@ function App() {
     getNftData();
   }, []);
 
+  console.log(nftsData);
+
   return (
     <ApolloProvider client={SUBGRAPH_CLIENT}>
       <Web3OnboardProvider web3Onboard={web3Onboard}>
@@ -68,23 +71,34 @@ function App() {
               <> {isOwner ? <ClaimSetupCard /> : <ClaimRewardCard />} </>
             ) : (
               <>
-                {isOwner ? (
+                {!isOwner ? (
                   <>
                     {nftsData.size &&
                       Array.from(nftsData.values()).map((data, key) => {
                         return (
                           <CollectionCard
                             key={key}
-                            tokenName={data.name}
+                            tokenName={data.name || data.title}
                             nftData={data}
                           />
                         );
                       })}
                   </>
                 ) : (
-                  nftsForRent.map((data, key) => {
-                    return <RentedCard upForRent={true} key={key} {...data} />;
-                  })
+                  <>
+                    {nftsData.size &&
+                      Array.from(nftsData.values())
+                        .filter((data) => data.lendingID)
+                        .map((data, key) => {
+                          return (
+                            <CollectionRentCard
+                              key={key}
+                              tokenName={data.name || data.title}
+                              nftData={data}
+                            />
+                          );
+                        })}
+                  </>
                 )}
               </>
             )}

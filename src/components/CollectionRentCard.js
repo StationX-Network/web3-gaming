@@ -1,26 +1,20 @@
 import { React, useEffect, useState } from "react";
-import { lendNft } from "../helper/contractCalls";
+import { rentNft } from "../helper/contractCalls";
 
-export default function CollectionCard(props) {
+export default function CollectionRentCard(props) {
   const { tokenName, nftData } = props;
 
-  const [isLendNft, setIsLendNft] = useState(false);
-  const [price, setPrice] = useState(0);
+  const [isRentNft, setIsRentNft] = useState(false);
   const [time, setTime] = useState(0);
   const [imgUrl, setImgUrl] = useState("");
   const [loading, setIsLoading] = useState(false);
 
   const lendNftFn = () => {
     setIsLoading(true);
-    const { token_address, token_id } = nftData;
-    const response = lendNft({
-      token_address,
-      token_id,
-      price,
-      time
-    });
+    const { nftAddress, tokenID } = nftData;
+    const response = rentNft(nftAddress, tokenID, time, nftData.lendingID);
     if (response.transactionHash) {
-      setIsLendNft(false);
+      setIsRentNft(false);
     }
     setIsLoading(false);
   };
@@ -77,7 +71,17 @@ export default function CollectionCard(props) {
           />
         </div>
         <div className='nft-name'>{tokenName}</div>
-        {nftData.lendingID ? (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            marginTop: "20px"
+          }}
+        >
+          <div>Price - {nftData.dailyRentPrice / 10 ** 6}</div>
+          <div>Max Duration - {nftData.maxRentDuration}</div>
+        </div>
+        {nftData.rentingID ? (
           <>
             <div
               style={{
@@ -90,21 +94,21 @@ export default function CollectionCard(props) {
               <div>Max Duration - {nftData.maxRentDuration}</div>
             </div>
             <button disabled={true} className='btn'>
-              Asset Lent
+              Asset Rented
             </button>
           </>
         ) : (
           <div>
-            {!isLendNft && (
+            {!isRentNft && (
               <button
                 style={{ marginTop: "36px" }}
-                onClick={() => setIsLendNft(true)}
+                onClick={() => setIsRentNft(true)}
                 className='btn'
               >
-                Lend NFT
+                Rent NFT
               </button>
             )}
-            {isLendNft && (
+            {isRentNft && (
               <>
                 <div className='input-div'>
                   <div style={{ width: "80%", margin: "12px 12px" }}>
@@ -119,23 +123,12 @@ export default function CollectionCard(props) {
                       }}
                     />
                   </div>
-                  <div style={{ width: "80%", margin: "12px 12px" }}>
-                    <label>Price/Day</label>
-                    <input
-                      placeholder='Price / Day'
-                      type='number'
-                      value={price}
-                      onChange={(e) => {
-                        setPrice(e.target.value);
-                      }}
-                    />
-                  </div>
                 </div>
                 <div>
                   <button onClick={lendNftFn} className='btn'>
                     {loading ? "Confirming ..." : "Confirm"}
                   </button>
-                  <button onClick={() => setIsLendNft(false)} className='btn'>
+                  <button onClick={() => setIsRentNft(false)} className='btn'>
                     Cancel
                   </button>
                 </div>

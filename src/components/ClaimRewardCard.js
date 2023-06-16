@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { deployClaimContract } from "../helper/contractCalls";
+import { claim } from "../helper/contractCalls";
 
 const ClaimRewardCard = () => {
   const [loading, setLoading] = useState(false);
 
   const onConfirm = async () => {
     setLoading(true);
-    await deployClaimContract();
+    await claim();
     setLoading(false);
   };
 
