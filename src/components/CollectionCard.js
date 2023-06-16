@@ -91,8 +91,8 @@ export default function CollectionCard(props) {
                 marginTop: "20px"
               }}
             >
-              <div>Price - {(nftData.dailyRentPrice / 10 ** 6).toFixed(4)}</div>
-              <div>Max Duration - {nftData.maxRentDuration}</div>
+              <div>Price ${(nftData.dailyRentPrice / 10 ** 6).toFixed(4)}</div>
+              <div>Max Duration {nftData.maxRentDuration}d</div>
             </div>
             <button disabled={true} className='btn'>
               Asset Lent

@@ -88,8 +88,8 @@ export default function CollectionRentCard(props) {
             marginTop: "20px"
           }}
         >
-          <div>Price - {(nftData.dailyRentPrice / 10 ** 6).toFixed(4)}</div>
-          <div>Max Duration - {nftData.maxRentDuration}</div>
+          <div>Price ${(nftData.dailyRentPrice / 10 ** 6).toFixed(4)}</div>
+          <div>Max Duration {nftData.maxRentDuration}d</div>
         </div>
         {nftData.rentingID ? (
           <>
