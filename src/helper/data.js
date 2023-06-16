@@ -1,6 +1,21 @@
 import axios from "axios";
 import { DAO_ADDRESS } from "./constants";
+import { Alchemy, Network } from "alchemy-sdk";
+import {
+  QUERY_ALL_LENDS,
+  QUERY_ALL_RENTS,
+  QUERY_LENDS_WITH_LENDINGID
+} from "./queries";
+
 const MAIN_API_URL = "https://api.stationx.network/v1/";
+
+const SUBGRAPH_URL =
+  "https://api.thegraph.com/subgraphs/name/subham7/stnx-web3-gaming1";
+
+const settings = {
+  apiKey: "kT3AsZH1GwL8xiWrDOA0kaV7lGUx6f6i", // Replace with your Alchemy API Key
+  network: Network.MATIC_MAINNET // Replace with your desired network
+};
 
 export const fetchNfts = async (daoAddress) => {
   try {
@@ -11,38 +26,6 @@ export const fetchNfts = async (daoAddress) => {
     return nftsData.data;
   } catch (error) {
     console.log(error);
-  }
-};
-
-export const QUERY_NFT_DETAILS = () => {
-  return `query{
-              stations(where: {daoAddress: "${DAO_ADDRESS}"}) {
-                id
-                ownerAddress
-                daoAddress
-                gnosisAddress
-                name
-                tokenType
-                symbol
-                isGtTransferable
-                imageUrl
-                isGovernanceActive
-              }
-      }`;
-};
-
-export const subgraphQuery = async (SUBGRAPH_URL, query) => {
-  try {
-    const response = await axios.post(SUBGRAPH_URL, {
-      query
-    });
-    if (response.data.errors) {
-      console.error(response.data.errors);
-      throw new Error(`Error making subgraph query ${response.data.errors}`);
-    }
-    return response.data.data;
-  } catch (error) {
-    console.error(error);
   }
 };
 
@@ -86,3 +69,108 @@ export const nftsForRent = [
     days: "21"
   }
 ];
+
+export const fetchLends = async (data) => {
+  try {
+    const { lends } = await subgraphQuery(
+      SUBGRAPH_URL,
+      QUERY_ALL_LENDS(DAO_ADDRESS)
+    );
+
+    const alchemy = new Alchemy(settings);
+
+    const newLendsData = [];
+    for (const lend of lends) {
+      const { nftAddress, tokenID } = lend;
+      const metadata = await getNFTMetadata(alchemy, nftAddress, tokenID);
+      newLendsData.push({ ...metadata, ...lend });
+    }
+    return newLendsData;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const fetchRents = async () => {
+  try {
+    const { rents } = await subgraphQuery(
+      SUBGRAPH_URL,
+      QUERY_ALL_RENTS(DAO_ADDRESS)
+    );
+    const alchemy = new Alchemy(settings);
+
+    for (const rent of rents) {
+      const { lendingID } = rent;
+      const { lends } = await subgraphQuery(
+        SUBGRAPH_URL,
+        QUERY_LENDS_WITH_LENDINGID(lendingID)
+      );
+
+      for (const lend of lends) {
+        const { nftAddress, tokenID } = lend;
+        const metadata = await getNFTMetadata(alchemy, nftAddress, tokenID);
+        lend.metadata = { ...metadata, ...lend };
+      }
+      rent.lenderData = { ...lends };
+    }
+
+    return rents;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const subgraphQuery = async (SUBGRAPH_URL, query) => {
+  try {
+    const response = await axios.post(SUBGRAPH_URL, {
+      query
+    });
+    if (response.data.errors) {
+      console.error(response.data.errors);
+      throw new Error(`Error making subgraph query ${response.data.errors}`);
+    }
+    return response.data.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getNFTMetadata = async (alchemy, nftAddress, tokenID) => {
+  try {
+    const response = await alchemy.nft.getNftMetadata(nftAddress, tokenID);
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const mergeData = (assetData, lendsData, rentData) => {
+  const dataMap = new Map();
+  assetData.forEach((asset) => {
+    const { token_address, token_id } = asset;
+    const key = token_address + "-" + token_id;
+    if (!dataMap.has(key)) {
+      dataMap.set(key, asset);
+    }
+  });
+  lendsData.forEach((asset) => {
+    const { nftAddress, tokenID } = asset;
+    const key = nftAddress + "-" + tokenID;
+    if (!dataMap.has(key)) {
+      dataMap.set(key, asset);
+    } else {
+      dataMap.set(key, { ...dataMap.get(key), ...asset });
+    }
+  });
+  rentData.forEach((asset) => {
+    const { nftAddress, tokenID } = asset;
+    const key = nftAddress + "-" + tokenID;
+    if (!dataMap.has(key)) {
+      dataMap.set(key, asset);
+    } else {
+      dataMap.set(key, { ...dataMap.get(key), ...asset });
+    }
+  });
+
+  return dataMap;
+};

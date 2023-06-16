@@ -23,11 +23,11 @@ export const lendNft = async ({ token_address, token_id, price, time }) => {
 
     const daoContract = new web3.eth.Contract(daoContractAbi, DAO_ADDRESS);
 
-    const responseApproval = await daoContract.methods
-      .updateProposalAndExecution(token_address, aproveData)
-      .send({ from: window.ethereum.selectedAddress });
+    // const responseApproval = await daoContract.methods
+    //   .updateProposalAndExecution(token_address, aproveData)
+    //   .send({ from: window.ethereum.selectedAddress });
 
-    console.log(responseApproval);
+    // console.log(responseApproval);
 
     const dataNft = ifaceNft.encodeFunctionData("lend", [
       ["0"],
@@ -35,7 +35,7 @@ export const lendNft = async ({ token_address, token_id, price, time }) => {
       [token_id],
       ["1"],
       [time],
-      ["0x0001100110"],
+      ["0x00c80000"],
       [3],
       [false]
     ]);

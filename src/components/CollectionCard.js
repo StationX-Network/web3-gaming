@@ -18,7 +18,7 @@ export default function CollectionCard(props) {
       token_address,
       token_id,
       price,
-      time: time * 86400
+      time
     });
     if (response.transactionHash) {
       setIsLendNft(false);
@@ -29,7 +29,11 @@ export default function CollectionCard(props) {
 
   useEffect(() => {
     const getNftImage = async () => {
-      if (nftData.token_uri.startsWith("https://ipfs")) {
+      if (nftData?.rawMetadata?.image) {
+        setImgUrl(nftData.rawMetadata.image);
+        return;
+      }
+      if (nftData.token_uri?.startsWith("https://ipfs")) {
         const jsonString = nftData.metadata;
         const jsonObject = JSON.parse(jsonString);
         const tokenURI = jsonObject.image;
@@ -75,10 +79,22 @@ export default function CollectionCard(props) {
           />
         </div>
         <div className='nft-name'>{tokenName}</div>
-        {rented ? (
-          <button disabled={true} className='btn'>
-            Asset Lent
-          </button>
+        {nftData.lendingID ? (
+          <>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginTop: "20px"
+              }}
+            >
+              <div>Price - {parseInt(nftData.dailyRentPrice / 10 ** 6)}</div>
+              <div>Max Duration - {nftData.maxRentDuration}</div>
+            </div>
+            <button disabled={true} className='btn'>
+              Asset Lent
+            </button>
+          </>
         ) : (
           <div>
             {!isLendNft && (
