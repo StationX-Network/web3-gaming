@@ -42,7 +42,7 @@ export const lendNft = async ({ token_address, token_id, price, time }) => {
       [token_id],
       ["1"],
       [time],
-      ["0x00000001"],
+      ["0x000001"],
       [3],
       [false]
     ]);
@@ -72,10 +72,10 @@ export const rentNft = async (token_address, token_id, time, lending_id) => {
     const nftRentContract = new web3.eth.Contract(nftMarketPlaceAbi, NFT_RENT);
 
     const dataNft = [
-      ["0"],
+      [0],
       [token_address],
       [token_id],
-      [lending_id],
+      [455],
       [Number(time)],
       [1]
     ];

@@ -9,6 +9,8 @@ export default function CollectionRentCard(props) {
   const [imgUrl, setImgUrl] = useState("");
   const [loading, setIsLoading] = useState(false);
 
+  console.log(nftData);
+
   const lendNftFn = () => {
     setIsLoading(true);
     const { nftAddress, tokenID } = nftData;
