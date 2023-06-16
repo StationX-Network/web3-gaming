@@ -138,7 +138,7 @@ export const mergeData = (assetData, lendsData, rentData) => {
         (data) => data.lendingID === asset.lendingID
       );
       if (rented) {
-        dataMap.set(key, { ...asset, ...rented });
+        dataMap.set(key, { ...asset, ...rented[0] });
       } else {
         dataMap.set(key, asset);
       }

@@ -42,7 +42,7 @@ export const lendNft = async ({ token_address, token_id, price, time }) => {
       [token_id],
       ["1"],
       [time],
-      ["0x000001"],
+      ["0x00000100"],
       [3],
       [false]
     ]);

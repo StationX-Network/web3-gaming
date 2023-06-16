@@ -4,21 +4,27 @@ import { rentNft } from "../helper/contractCalls";
 export default function CollectionRentCard(props) {
   const { tokenName, nftData } = props;
 
+  console.log(nftData);
+
   const [isRentNft, setIsRentNft] = useState(false);
   const [time, setTime] = useState(0);
   const [imgUrl, setImgUrl] = useState("");
   const [loading, setIsLoading] = useState(false);
 
-  console.log(nftData);
-
-  const lendNftFn = () => {
+  const rentNftFn = async () => {
     setIsLoading(true);
-    const { nftAddress, tokenID } = nftData;
-    const response = rentNft(nftAddress, tokenID, time, nftData.lendingID);
+    const { nftAddress, tokenID, getNftData } = nftData;
+    const response = await rentNft(
+      nftAddress,
+      tokenID,
+      time,
+      nftData.lendingID
+    );
     if (response.transactionHash) {
       setIsRentNft(false);
+      setIsLoading(false);
+      await getNftData();
     }
-    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -80,22 +86,16 @@ export default function CollectionRentCard(props) {
             marginTop: "20px"
           }}
         >
-          <div>Price - {nftData.dailyRentPrice / 10 ** 6}</div>
+          <div>Price - {(nftData.dailyRentPrice / 10 ** 6).toFixed(4)}</div>
           <div>Max Duration - {nftData.maxRentDuration}</div>
         </div>
         {nftData.rentingID ? (
           <>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                marginTop: "20px"
-              }}
+            <button
+              style={{ marginTop: "36px" }}
+              disabled={true}
+              className='btn'
             >
-              <div>Price - {parseInt(nftData.dailyRentPrice / 10 ** 6)}</div>
-              <div>Max Duration - {nftData.maxRentDuration}</div>
-            </div>
-            <button disabled={true} className='btn'>
               Asset Rented
             </button>
           </>
@@ -127,7 +127,7 @@ export default function CollectionRentCard(props) {
                   </div>
                 </div>
                 <div>
-                  <button onClick={lendNftFn} className='btn'>
+                  <button onClick={rentNftFn} className='btn'>
                     {loading ? "Confirming ..." : "Confirm"}
                   </button>
                   <button onClick={() => setIsRentNft(false)} className='btn'>

@@ -2,7 +2,7 @@ import { React, useEffect, useState } from "react";
 import { lendNft } from "../helper/contractCalls";
 
 export default function CollectionCard(props) {
-  const { tokenName, nftData } = props;
+  const { tokenName, nftData, getNftData } = props;
 
   const [isLendNft, setIsLendNft] = useState(false);
   const [price, setPrice] = useState(0);
@@ -10,10 +10,10 @@ export default function CollectionCard(props) {
   const [imgUrl, setImgUrl] = useState("");
   const [loading, setIsLoading] = useState(false);
 
-  const lendNftFn = () => {
+  const lendNftFn = async () => {
     setIsLoading(true);
     const { token_address, token_id } = nftData;
-    const response = lendNft({
+    const response = await lendNft({
       token_address,
       token_id,
       price,
@@ -21,8 +21,9 @@ export default function CollectionCard(props) {
     });
     if (response.transactionHash) {
       setIsLendNft(false);
+      setIsLoading(false);
+      await getNftData();
     }
-    setIsLoading(false);
   };
 
   useEffect(() => {
