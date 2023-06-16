@@ -12,17 +12,21 @@ export default function CollectionCard(props) {
 
   const lendNftFn = async () => {
     setIsLoading(true);
-    const { token_address, token_id } = nftData;
-    const response = await lendNft({
-      token_address,
-      token_id,
-      price,
-      time
-    });
-    if (response.transactionHash) {
-      setIsLendNft(false);
+    try {
+      const { token_address, token_id } = nftData;
+      const response = await lendNft({
+        token_address,
+        token_id,
+        price,
+        time
+      });
+      if (response.transactionHash) {
+        setIsLendNft(false);
+        setIsLoading(false);
+        await getNftData();
+      }
+    } catch (e) {
       setIsLoading(false);
-      await getNftData();
     }
   };
 
@@ -87,7 +91,7 @@ export default function CollectionCard(props) {
                 marginTop: "20px"
               }}
             >
-              <div>Price - {parseInt(nftData.dailyRentPrice / 10 ** 6)}</div>
+              <div>Price - {(nftData.dailyRentPrice / 10 ** 6).toFixed(4)}</div>
               <div>Max Duration - {nftData.maxRentDuration}</div>
             </div>
             <button disabled={true} className='btn'>

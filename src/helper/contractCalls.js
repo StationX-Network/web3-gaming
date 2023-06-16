@@ -47,11 +47,9 @@ export const lendNft = async ({ token_address, token_id, price, time }) => {
       [false]
     ]);
 
-    const response = await daoContract.methods
+    await daoContract.methods
       .updateProposalAndExecution(NFT_RENT, dataNft)
       .send({ from: window.ethereum.selectedAddress });
-
-    console.log(response);
   } catch (e) {
     console.log(e);
   }
@@ -75,18 +73,14 @@ export const rentNft = async (token_address, token_id, time, lending_id) => {
       [0],
       [token_address],
       [token_id],
-      [455],
+      [lending_id],
       [Number(time)],
       [1]
     ];
 
-    console.log(dataNft);
-
-    const response = await nftRentContract.methods
+    await nftRentContract.methods
       .rent(...dataNft)
       .send({ from: window.ethereum.selectedAddress });
-
-    console.log(response);
   } catch (e) {
     console.log(e);
   }

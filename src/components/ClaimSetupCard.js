@@ -16,7 +16,7 @@ const ClaimSetupCard = () => {
   };
 
   return (
-    <div style={{ width: "60vw" }}>
+    <div className='setupRewardsContainer'>
       <h3>Setup Rewards Claim</h3>
       <div className='claim-input-div'>
         <label>Claim description</label>

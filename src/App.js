@@ -61,7 +61,7 @@ function App() {
               <> {isOwner ? <ClaimSetupCard /> : <ClaimRewardCard />} </>
             ) : (
               <>
-                {!isOwner ? (
+                {isOwner ? (
                   <>
                     {nftsData.size &&
                       Array.from(nftsData.values()).map((data, key) => {

@@ -4,8 +4,6 @@ import { rentNft } from "../helper/contractCalls";
 export default function CollectionRentCard(props) {
   const { tokenName, nftData } = props;
 
-  console.log(nftData);
-
   const [isRentNft, setIsRentNft] = useState(false);
   const [time, setTime] = useState(0);
   const [imgUrl, setImgUrl] = useState("");
@@ -13,17 +11,21 @@ export default function CollectionRentCard(props) {
 
   const rentNftFn = async () => {
     setIsLoading(true);
-    const { nftAddress, tokenID, getNftData } = nftData;
-    const response = await rentNft(
-      nftAddress,
-      tokenID,
-      time,
-      nftData.lendingID
-    );
-    if (response.transactionHash) {
-      setIsRentNft(false);
+    try {
+      const { nftAddress, tokenID, getNftData } = nftData;
+      const response = await rentNft(
+        nftAddress,
+        tokenID,
+        time,
+        nftData.lendingID
+      );
+      if (response.transactionHash) {
+        setIsRentNft(false);
+        setIsLoading(false);
+        await getNftData();
+      }
+    } catch (e) {
       setIsLoading(false);
-      await getNftData();
     }
   };
 

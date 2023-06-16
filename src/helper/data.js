@@ -145,19 +145,5 @@ export const mergeData = (assetData, lendsData, rentData) => {
     }
   });
 
-  // const lendingIds = lendsData.map((data) => data.lendingID);
-
-  // rentData.forEach((asset) => {
-  //   const { lendingID } = asset;
-  //   if (lendingIds.includes(lendingID)) {
-  //     const key = nftAddress + "-" + tokenID;
-  //     if (dataMap.has(key)) {
-  //       dataMap.set(key, { ...dataMap.get(key), ...asset });
-  //     }
-  //   }
-  // });
-
-  // console.log(dataMap);
-
   return dataMap;
 };
