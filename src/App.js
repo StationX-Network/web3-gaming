@@ -54,11 +54,10 @@ function App() {
               <> {isOwner ? <ClaimSetupCard /> : <ClaimRewardCard />} </>
             ) : (
               <>
-                {isOwner ? (
+                {!isOwner ? (
                   <>
                     {nftsData &&
                       nftsData.map((data, key) => {
-                        console.log(key);
                         if (key === 2 || key === 3) {
                           return (
                             <RentedCard key={key} {...rentedNfts[key - 2]} />

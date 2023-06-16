@@ -21,6 +21,7 @@ export default function CollectionCard(props) {
       time: time * 86400
     });
     if (response.transactionHash) {
+      setIsLendNft(false);
       setRented(true);
     }
     setIsLoading(false);
