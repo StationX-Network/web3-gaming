@@ -1,8 +1,8 @@
 import { React, useState } from "react";
-import { lendNft } from "../helper/contractCalls";
+import { rentNft } from "../helper/contractCalls";
 
 export default function RentedCard(props) {
-  const { tokenName, imgUrl, price, days, upForRent } = props;
+  const { tokenName, imgUrl, price, days, upForRent, lendingId } = props;
   const [isRentNft, setIsRentNft] = useState(false);
   const [loading, setIsLoading] = useState(false);
   const [time, setTime] = useState(0);
@@ -11,10 +11,10 @@ export default function RentedCard(props) {
   const rentNftFn = () => {
     setIsLoading(true);
     const { token_address, token_id } = props;
-    const response = lendNft({
+    const response = rentNft({
       token_address,
       token_id,
-      price,
+      lendingId,
       time: time * 86400
     });
     if (response.transactionHash) {

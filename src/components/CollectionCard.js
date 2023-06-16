@@ -77,7 +77,7 @@ export default function CollectionCard(props) {
         <div className='nft-name'>{tokenName}</div>
         {rented ? (
           <button disabled={true} className='btn'>
-            Already Lent
+            Asset Lent
           </button>
         ) : (
           <div>

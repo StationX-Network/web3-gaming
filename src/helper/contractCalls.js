@@ -34,14 +34,52 @@ export const lendNft = async ({ token_address, token_id, price, time }) => {
       [token_address],
       [token_id],
       ["1"],
-      [1],
-      ["0x00000001"],
+      [time],
+      ["0x0001100110"],
       [3],
       [false]
     ]);
 
     const response = await daoContract.methods
       .updateProposalAndExecution(NFT_RENT, dataNft)
+      .send({ from: window.ethereum.selectedAddress });
+
+    console.log(response);
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const rentNft = async ({
+  token_address,
+  token_id,
+  time,
+  lending_id
+}) => {
+  try {
+    const web3 = new Web3(window.ethereum);
+
+    const usdcContract = new web3.eth.Contract(erc20ABI, USDC);
+
+    const responseApproval = await usdcContract.methods
+      .approve(NFT_RENT, ethers.parseUnits("10", 6).toString())
+      .send({ from: window.ethereum.selectedAddress });
+
+    console.log(responseApproval);
+
+    const nftRentContract = new web3.eth.Contract(nftMarketPlaceAbi, NFT_RENT);
+
+    const dataNft = [
+      ["0"],
+      [token_address],
+      [token_id],
+      [lending_id],
+      [time],
+      ["0x00000001"]
+    ];
+
+    const response = await nftRentContract.methods
+      .rent(NFT_RENT, ...dataNft)
       .send({ from: window.ethereum.selectedAddress });
 
     console.log(response);
