@@ -82,11 +82,12 @@ select {
 }
 
 .setupRewardsContainer {
-  width: "60vw";
-  background: "#17306A";
+  width: 60vw;
+  background: #17306a;
   padding: 30px;
-  border-radius: "20px";
-  box-shadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px";
+  border-radius: 20px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  height: fit-content;
 }
 
 .listing-div > div {
