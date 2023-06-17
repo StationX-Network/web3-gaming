@@ -15,6 +15,7 @@ function App() {
   const [nftsData, setNftsData] = useState([]);
   const [selected, setSelected] = useState("Lend");
   const [isOwner, setIsOwner] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (
@@ -28,15 +29,21 @@ function App() {
   }, [window.ethereum.selectedAddress]);
 
   const getNftData = async () => {
-    const assetsData = await fetchNfts(DAO_ADDRESS);
+    try {
+      const assetsData = await fetchNfts(DAO_ADDRESS);
 
-    const lendsData = await fetchLends();
+      const lendsData = await fetchLends();
 
-    const rentsData = await fetchRents();
+      const rentsData = await fetchRents();
 
-    const data = mergeData(assetsData, lendsData, rentsData);
+      const data = mergeData(assetsData, lendsData, rentsData);
 
-    setNftsData(data);
+      setNftsData(data);
+
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -56,42 +63,49 @@ function App() {
               setSelected("Lend");
             }}
           />
-          <div className='listing-div'>
-            {selected === "Claim" ? (
+          {loading ? (
+            <div
+              style={{
+                display: "flex",
+                height: "100vh",
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+            >
+              <h1> Loading...</h1>
+            </div>
+          ) : (
+            <div className='listing-div'>
               <div
                 style={{
-                  width: "100%",
-                  height: "100%",
                   display: "flex",
-                  justifyContent: "center"
+                  alignContent: "center",
+                  justifyContent: "center",
+                  width: "90vw"
                 }}
               >
-                {isOwner ? <ClaimSetupCard /> : <ClaimRewardCard />}{" "}
+                <h1>Gaming Guild Assets</h1>
               </div>
-            ) : (
-              <>
-                {!isOwner ? (
-                  <>
-                    {nftsData.size &&
-                      Array.from(nftsData.values()).map((data, key) => {
-                        return (
-                          <CollectionCard
-                            key={key}
-                            tokenName={data.name || data.title}
-                            nftData={data}
-                            getNftData={getNftData}
-                          />
-                        );
-                      })}
-                  </>
-                ) : (
-                  <>
-                    {nftsData.size &&
-                      Array.from(nftsData.values())
-                        .filter((data) => data.lendingID)
-                        .map((data, key) => {
+              {selected === "Claim" ? (
+                <div
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    display: "flex",
+                    justifyContent: "center"
+                  }}
+                >
+                  {isOwner ? <ClaimSetupCard /> : <ClaimRewardCard />}{" "}
+                </div>
+              ) : (
+                <>
+                  {isOwner ? (
+                    <>
+                      {nftsData.size &&
+                        Array.from(nftsData.values()).map((data, key) => {
                           return (
-                            <CollectionRentCard
+                            <CollectionCard
                               key={key}
                               tokenName={data.name || data.title}
                               nftData={data}
@@ -99,11 +113,28 @@ function App() {
                             />
                           );
                         })}
-                  </>
-                )}
-              </>
-            )}
-          </div>
+                    </>
+                  ) : (
+                    <>
+                      {nftsData.size &&
+                        Array.from(nftsData.values())
+                          .filter((data) => data.lendingID)
+                          .map((data, key) => {
+                            return (
+                              <CollectionRentCard
+                                key={key}
+                                tokenName={data.name || data.title}
+                                nftData={data}
+                                getNftData={getNftData}
+                              />
+                            );
+                          })}
+                    </>
+                  )}
+                </>
+              )}
+            </div>
+          )}
         </div>
       </Web3OnboardProvider>
     </ApolloProvider>

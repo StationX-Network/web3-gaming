@@ -59,7 +59,7 @@ export const rentNft = async (token_address, token_id, time, lending_id) => {
   try {
     const web3 = new Web3(window.ethereum);
 
-    const usdcContract = new web3.eth.Contract(erc20ABI, USDC);
+    // const usdcContract = new web3.eth.Contract(erc20ABI, USDC);
 
     // const responseApproval = await usdcContract.methods
     //   .approve(NFT_RENT, ethers.parseUnits("10", 6).toString())
