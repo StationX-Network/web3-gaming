@@ -77,16 +77,6 @@ function App() {
             </div>
           ) : (
             <div className='listing-div'>
-              <div
-                style={{
-                  display: "flex",
-                  alignContent: "center",
-                  justifyContent: "center",
-                  width: "90vw"
-                }}
-              >
-                <h1>Gaming Guild Assets</h1>
-              </div>
               {selected === "Claim" ? (
                 <div
                   style={{
@@ -96,12 +86,50 @@ function App() {
                     justifyContent: "center"
                   }}
                 >
-                  {isOwner ? <ClaimSetupCard /> : <ClaimRewardCard />}{" "}
+                  {isOwner ? (
+                    <>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignContent: "center",
+                          justifyContent: "center",
+                          width: "90vw"
+                        }}
+                      >
+                        <h1>Setup Token Distribution </h1>
+                      </div>
+                      <ClaimSetupCard />
+                    </>
+                  ) : (
+                    <>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignContent: "center",
+                          justifyContent: "center",
+                          width: "90vw"
+                        }}
+                      >
+                        <h1>Claim Token Distribution </h1>
+                      </div>
+                      <ClaimRewardCard />
+                    </>
+                  )}
                 </div>
               ) : (
                 <>
                   {isOwner ? (
                     <>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignContent: "center",
+                          justifyContent: "center",
+                          width: "90vw"
+                        }}
+                      >
+                        <h1>Gaming Guild Assets</h1>
+                      </div>
                       {nftsData.size &&
                         Array.from(nftsData.values()).map((data, key) => {
                           return (
@@ -116,6 +144,16 @@ function App() {
                     </>
                   ) : (
                     <>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignContent: "center",
+                          justifyContent: "center",
+                          width: "90vw"
+                        }}
+                      >
+                        <h1>Rent a Game Asset</h1>
+                      </div>
                       {nftsData.size &&
                         Array.from(nftsData.values())
                           .filter((data) => data.lendingID)
