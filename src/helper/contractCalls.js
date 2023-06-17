@@ -17,14 +17,14 @@ export const lendNft = async ({ token_address, token_id, price, time }) => {
   try {
     const ifaceNft = new Interface(nftMarketPlaceAbi);
 
-    const approveIface = new Interface([
-      "function setApprovalForAll(address operator, bool approved)"
-    ]);
+    // const approveIface = new Interface([
+    //   "function setApprovalForAll(address operator, bool approved)"
+    // ]);
 
-    const aproveData = approveIface.encodeFunctionData("setApprovalForAll", [
-      NFT_RENT,
-      token_id
-    ]);
+    // const aproveData = approveIface.encodeFunctionData("setApprovalForAll", [
+    //   NFT_RENT,
+    //   token_id
+    // ]);
 
     const web3 = new Web3(window.ethereum);
 
