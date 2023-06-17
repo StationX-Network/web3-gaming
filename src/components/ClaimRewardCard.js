@@ -11,11 +11,16 @@ const ClaimRewardCard = () => {
   };
 
   return (
-    <div style={{ width: "60vw", textAlign: "center" }}>
-      <h3>Claim Rewards of Asset Renting</h3>
+    <div
+      style={{
+        width: "60vw",
+        textAlign: "center",
+        marginTop: "35vh"
+      }}
+    >
       <div style={{ width: "100%", textAlign: "center" }}>
         <button onClick={onConfirm} className='btn'>
-          {loading ? "Claiming ..." : "Claim Rewards"}
+          {loading ? "Claiming ..." : "Claim Rewards Earned From Asset Renting"}
         </button>
         <div style={{ marginTop: "12px" }}>
           Rewards will be distributed to all members on pro rata basis
